@@ -2,7 +2,7 @@ __author__ = 'chenkovsky'
 
 import pandas as pd
 import numpy as np
-import knn
+from . import knn
 class TestRecommender:
     def setUp(self):
         data = {1: {1: 3.0, 2: 4.0, 3: 3.5, 4: 5.0, 5: 3.0},
@@ -21,4 +21,6 @@ class TestRecommender:
         assert(rec.recommend(4) == [4,0,5])
     def testItemBasedKNNRecommender(self):
         rec = knn.ItemBasedKNNRecommender(self.matrix)
+        assert(rec.recommend(4) == [4,0,5])
+        rec = knn.ItemBasedKNNRecommender(self.matrix, lazy = True)
         assert(rec.recommend(4) == [4,0,5])
