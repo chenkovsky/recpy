@@ -3,6 +3,7 @@ __author__ = 'chenkovsky'
 import pandas as pd
 import numpy as np
 from . import knn
+from sklearn.neighbors import KDTree
 class TestRecommender:
     def setUp(self):
         data = {1: {1: 3.0, 2: 4.0, 3: 3.5, 4: 5.0, 5: 3.0},
@@ -18,9 +19,16 @@ class TestRecommender:
         self.matrix = np.nan_to_num(m)
     def testUserBasedKNNRecommender(self):
         rec = knn.UserBasedKNNRecommender(self.matrix)
-        assert(rec.recommend(4) == [4,0,5])
+        assert(rec.recommend(4)[0] == [4,0,5])
+    def testUserBasedKNNRecommenderLazy(self):
+        rec = knn.UserBasedKNNRecommender(self.matrix,lazy = True)
+        assert(rec.recommend(4)[0] == [4,0,5])
+    def testUserBasedKNNRecommenderKDTree(self):
+        rec = knn.UserBasedKNNRecommender(self.matrix,lazy = True, kdt = KDTree(self.matrix, metric= 'euclidean'))
+        assert(rec.recommend(4)[0] == [4,0,5])
     def testItemBasedKNNRecommender(self):
         rec = knn.ItemBasedKNNRecommender(self.matrix)
-        assert(rec.recommend(4) == [4,0,5])
+        assert(rec.recommend(4)[0] == [4,0,5])
+    def testItemBasedKNNRecommenderLazy(self):
         rec = knn.ItemBasedKNNRecommender(self.matrix, lazy = True)
-        assert(rec.recommend(4) == [4,0,5])
+        assert(rec.recommend(4)[0] == [4,0,5])
